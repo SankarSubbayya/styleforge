@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets and credentials — never commit (submission repo must be public)
+.env
+*.local.md
+secrets/
+
+# Local data: clips, caches, outputs
+data/

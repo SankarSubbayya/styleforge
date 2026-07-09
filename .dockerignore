@@ -1,0 +1,9 @@
+.git
+.venv
+data
+*.local.md
+.env
+amd_hackathon_readme.md
+PRD.md
+__pycache__
+*.pyc
