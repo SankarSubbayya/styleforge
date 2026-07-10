@@ -89,10 +89,11 @@
   </table>
   <p class="note">30 held-out scenes × 4 styles, judged by gpt-oss-120b — an independent
     model family, so nobody grades their own homework. Two targeted DPO rounds: round 1
-    lifted sarcastic +0.54 over base; round 2 aimed at the diagnosed accuracy gap and
-    lifted formal +0.50. The frontier model keeps the leaderboard slot on detail density —
-    a capacity gap, not a tuning gap — so best-of-N ships as default and the tuned Gemma
-    rides in-container as the zero-dependency fallback voice.</p>
+    lifted sarcastic +0.54 over base; round 2 lifted formal +0.50 — and brought the 4B to
+    <b>frontier parity on factual accuracy (7.62 vs Kimi's 7.62)</b>. The entire residual
+    gap is tone (8.03 vs 8.74): what resists distillation into 4B parameters is wit. So
+    best-of-N ships as default and the tuned Gemma rides in-container as the
+    zero-dependency fallback voice.</p>
 
   <h2>Architecture: eyes, voice, taste</h2>
   <div class="flow">
