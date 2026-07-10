@@ -41,11 +41,7 @@ def load(path):
     except Exception:
         print(f"--- AutoModelForCausalLM failed for {path}: ---")
         traceback.print_exc()
-        from transformers import Gemma3ForCausalLM
-
-        model = Gemma3ForCausalLM.from_pretrained(
-            path, torch_dtype=torch.bfloat16, attn_implementation="eager"
-        )
+        raise
     model = model.to("cuda")
     tok = AutoTokenizer.from_pretrained(path)
     return model, tok
@@ -56,17 +52,20 @@ def caption(model, tok, description: str, style: str) -> str:
         {"role": "system", "content": SYSTEM},
         {"role": "user", "content": _user_prompt(description, "", style)},
     ]
+    def _encode(msgs):
+        enc = tok.apply_chat_template(msgs, add_generation_prompt=True, return_tensors="pt")
+        # Newer transformers returns BatchEncoding; older returns a bare tensor.
+        if not torch.is_tensor(enc):
+            enc = enc["input_ids"]
+        return enc.to(model.device)
+
     try:
-        ids = tok.apply_chat_template(
-            messages, add_generation_prompt=True, return_tensors="pt"
-        ).to(model.device)
+        ids = _encode(messages)
     except Exception:  # template without system role: fold into user turn
         merged = [{"role": "user", "content": SYSTEM + "\n\n" + messages[1]["content"]}]
-        ids = tok.apply_chat_template(
-            merged, add_generation_prompt=True, return_tensors="pt"
-        ).to(model.device)
+        ids = _encode(merged)
     out = model.generate(
-        ids, max_new_tokens=80, do_sample=True, temperature=0.4, top_p=0.95,
+        input_ids=ids, max_new_tokens=80, do_sample=True, temperature=0.4, top_p=0.95,
         pad_token_id=tok.eos_token_id,
     )
     text = tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True)
