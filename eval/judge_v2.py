@@ -31,6 +31,10 @@ for line in (EVAL_DIR / "eval_captions_v2.jsonl").open():
     r = json.loads(line)
     r["arm"] = "v2"
     rows.append(r)
+for line in (EVAL_DIR / "eval_captions_v3.jsonl").open():
+    r = json.loads(line)
+    r["arm"] = "v3"
+    rows.append(r)
 
 scored = []
 for n, r in enumerate(rows):
@@ -45,14 +49,14 @@ for r in scored:
     agg[r["arm"]]["__all__"].append(r["overall"])
 
 print(f"{'arm':<6}", *[f"{s[:12]:>14}" for s in config.STYLES], f"{'ALL':>8}")
-for arm in ("kimi", "base", "v1", "v2"):
+for arm in ("kimi", "base", "v1", "v2", "v3"):
     cells = [f"{sum(agg[arm][s]) / len(agg[arm][s]):>14.2f}" for s in config.STYLES]
     print(f"{arm:<6}", *cells, f"{sum(agg[arm]['__all__']) / len(agg[arm]['__all__']):>8.2f}")
 
 by_cell = defaultdict(dict)
 for r in scored:
     by_cell[(r["desc_idx"], r["style"])][r["arm"]] = r["overall"]
-for a, b in [("v2", "kimi"), ("v2", "v1"), ("v2", "base")]:
+for a, b in [("v3", "v2"), ("v3", "base"), ("v3", "kimi")]:
     w = sum(1 for c in by_cell.values() if a in c and b in c and c[a] > c[b])
     t = sum(1 for c in by_cell.values() if a in c and b in c and c[a] == c[b])
     l = sum(1 for c in by_cell.values() if a in c and b in c and c[a] < c[b])

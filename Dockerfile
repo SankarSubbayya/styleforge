@@ -17,8 +17,8 @@ RUN pip install --no-cache-dir . \
     && pip install --no-cache-dir llama-cpp-python \
        --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
 
-# The DPO-tuned Gemma 3 4B (Q4_K_M GGUF) — round-2 model (won the eval vs v1).
-COPY data/models/styleforge-v2-q4.gguf /app/models/styleforge-gemma-q4.gguf
+# The DPO-tuned Gemma 3 4B (Q4_K_M GGUF) — round-3 model (wins all styles vs base).
+COPY data/models/styleforge-gemma-q4.gguf /app/models/styleforge-gemma-q4.gguf
 
 # Pre-fetch the Whisper model at build time — no download inside the 10-min eval window.
 ENV HF_HOME=/app/.cache
@@ -30,6 +30,11 @@ ARG FIREWORKS_API_KEY=""
 ENV FIREWORKS_API_KEY=${FIREWORKS_API_KEY}
 
 ENV STYLEFORGE_DATA=/data
+# Scoring-quality knobs (Track 2 has no token penalty; budget headroom is ~9 min):
+# 5 candidates/style, two-family judge ensemble for reranking, denser frame sampling.
+ENV HARNESS_K=5
+ENV JUDGE_ENSEMBLE="accounts/fireworks/models/kimi-k2p6,accounts/fireworks/models/gpt-oss-120b"
+ENV MAX_FRAMES=16
 RUN mkdir -p /data /input /output
 
 ENTRYPOINT ["styleforge"]

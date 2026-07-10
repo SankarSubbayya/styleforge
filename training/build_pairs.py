@@ -17,14 +17,30 @@ from styleforge import config  # noqa: E402
 from styleforge.stylize import SYSTEM, _user_prompt  # noqa: E402
 
 TRAIN_DIR = config.DATA_DIR / "train"
-# v2 (post-eval): accuracy-weighted ranking. Round-1 pairs optimized (acc+tone)/2,
-# which taught tone at accuracy's expense — eval failures were detail/accuracy losses.
+# v3 (post-round-2 eval): STYLE-CONDITIONAL weighting. Global accuracy-weighting (v2)
+# fixed formal (+0.50) but cost the humor styles (-0.25/-0.19 vs base) — the judge
+# rewards the joke more than the fact inventory there. Weights per style:
 MIN_GAP = 1.0
-MIN_CHOSEN_ACC = 8
+STYLE_WEIGHTS = {  # (accuracy, tone)
+    "formal": (0.6, 0.4),
+    "sarcastic": (0.5, 0.5),
+    "humorous_tech": (0.4, 0.6),
+    "humorous_non_tech": (0.4, 0.6),
+}
+STYLE_MIN_ACC = {  # humor may take small liberties; formal may not
+    "formal": 8, "sarcastic": 8, "humorous_tech": 7, "humorous_non_tech": 7,
+}
 
 
-def rank_score(c: dict) -> float:
-    return 0.6 * c["accuracy"] + 0.4 * c["tone"]
+def candidate_accuracy(c: dict) -> float:
+    return float(c.get("accuracy", c.get("overall", 0)))
+
+
+def rank_score(c: dict, style: str = "formal") -> float:
+    wa, wt = STYLE_WEIGHTS[style]
+    accuracy = candidate_accuracy(c)
+    tone = float(c.get("tone", c.get("overall", accuracy)))
+    return wa * accuracy + wt * tone
 
 
 def main() -> None:
@@ -36,7 +52,11 @@ def main() -> None:
     ):
         for line in cand_path.open():
             rec = json.loads(line)
-            cands = sorted(rec["candidates"], key=rank_score, reverse=True)
+            style = rec["style"]
+            min_acc = STYLE_MIN_ACC[style]
+            cands = sorted(
+                rec["candidates"], key=lambda c: rank_score(c, style), reverse=True
+            )
             if not cands:
                 continue
             prompt_msgs = [
@@ -48,7 +68,7 @@ def main() -> None:
             ]
             top, bottom = cands[0], cands[-1]
             # SFT teaches only from captions that are BOTH faithful and on-tone.
-            if top["accuracy"] >= MIN_CHOSEN_ACC:
+            if candidate_accuracy(top) >= min_acc:
                 fs.write(
                     json.dumps(
                         {"messages": prompt_msgs
@@ -60,9 +80,9 @@ def main() -> None:
             # DPO pair: chosen must be accurate, and must beat rejected on the
             # accuracy-weighted score AND not lose on accuracy itself.
             if (
-                top["accuracy"] >= MIN_CHOSEN_ACC
-                and rank_score(top) - rank_score(bottom) >= MIN_GAP
-                and top["accuracy"] >= bottom["accuracy"]
+                candidate_accuracy(top) >= min_acc
+                and rank_score(top, style) - rank_score(bottom, style) >= MIN_GAP
+                and candidate_accuracy(top) >= candidate_accuracy(bottom)
             ):
                 fp.write(
                     json.dumps(

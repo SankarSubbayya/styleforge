@@ -16,3 +16,7 @@ secrets/
 
 # Local data: clips, caches, outputs
 data/
+
+# Generated app/runtime artifacts
+frontend/node_modules/
+io/output/

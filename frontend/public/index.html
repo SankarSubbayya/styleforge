@@ -118,12 +118,15 @@ const CLIP_URLS = {
   v2: "https://storage.googleapis.com/amd-hackathon-clips/13825391-uhd_3840_2160_30fps.mp4",
   v3: "https://storage.googleapis.com/amd-hackathon-clips/3044693-uhd_3840_2160_24fps.mp4",
 };
+const esc = s => String(s).replace(/[&<>"']/g, ch => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[ch]));
 fetch("results.json").then(r => r.json()).then(results => {
   document.getElementById("clips").innerHTML = results.map(t => `
     <div class="clip-card">
       <video src="${CLIP_URLS[t.task_id]}" controls muted preload="metadata"></video>
       <div class="caps">${Object.entries(t.captions).map(([s, c]) =>
-        `<div class="cap"><div class="style">${s}</div><p>${c}</p></div>`).join("")}
+        `<div class="cap"><div class="style">${esc(s)}</div><p>${esc(c)}</p></div>`).join("")}
       </div>
     </div>`).join("");
 }).catch(() => document.getElementById("clips").textContent = "results loading…");
