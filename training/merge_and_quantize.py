@@ -28,6 +28,12 @@ def main() -> None:
     AutoTokenizer.from_pretrained(BASE).save_pretrained(MERGED)
     print(f"merged -> {MERGED}")
 
+    # GGUF conversion pip-installs llama.cpp requirements, which POISONS the torch
+    # env (see RUNBOOK). Run that part only in a throwaway container (SKIP_GGUF=1 here).
+    if os.getenv("SKIP_GGUF") == "1":
+        print("SKIP_GGUF=1 — merge done, quantize separately in a throwaway container")
+        return
+
     # llama.cpp conversion (clone if absent; convert bf16 -> GGUF -> quantize Q4_K_M)
     if not os.path.isdir("llama.cpp"):
         subprocess.run(

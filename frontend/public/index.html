@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StyleForge — one clip, four voices</title>
+<style>
+  :root {
+    --paper: #F4F0E8;
+    --card: #FDFBF7;
+    --ink: #2B2A27;
+    --muted: #6E6A61;
+    --accent: #C6552B;
+    --edge: #E3DCCF;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+  h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 600; }
+  h1 { font-size: 3rem; letter-spacing: -0.02em; }
+  h2 { font-size: 1.6rem; margin: 3rem 0 1rem; }
+  .kicker { color: var(--accent); font-size: 0.85rem; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 600; margin-bottom: 0.75rem; }
+  .lede { color: var(--muted); font-size: 1.2rem; max-width: 46rem; margin-top: 0.75rem; }
+  .badges { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.4rem; }
+  .badge { background: var(--card); border: 1px solid var(--edge); border-radius: 999px;
+    padding: 0.35rem 0.9rem; font-size: 0.85rem; color: var(--muted); }
+  .badge.hot { border-color: var(--accent); color: var(--accent); }
+  .clip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+  .clip-card { background: var(--card); border: 1px solid var(--edge); border-radius: 14px;
+    overflow: hidden; }
+  .clip-card video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #000; }
+  .caps { padding: 1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .cap .style { font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem;
+    color: var(--accent); font-weight: 600; letter-spacing: 0.06em; }
+  .cap p { font-size: 0.92rem; margin-top: 0.1rem; }
+  table { border-collapse: collapse; width: 100%; background: var(--card);
+    border: 1px solid var(--edge); border-radius: 12px; overflow: hidden; font-size: 0.95rem; }
+  th, td { padding: 0.65rem 0.9rem; text-align: center; border-bottom: 1px solid var(--edge); }
+  th { background: #EDE7DA; font-weight: 600; font-size: 0.85rem; }
+  td:first-child, th:first-child { text-align: left; font-weight: 600; }
+  tr.hot td { color: var(--accent); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .note { color: var(--muted); font-size: 0.88rem; margin-top: 0.6rem; }
+  .flow { display: flex; gap: 0.4rem; align-items: stretch; flex-wrap: wrap; margin-top: 0.5rem; }
+  .stage { flex: 1 1 150px; background: var(--card); border: 1px solid var(--edge);
+    border-radius: 12px; padding: 0.9rem; }
+  .stage.hot { border-color: var(--accent); }
+  .stage .tag { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted);
+    text-transform: uppercase; font-weight: 700; }
+  .stage.hot .tag { color: var(--accent); }
+  .stage p { font-size: 0.85rem; margin-top: 0.35rem; }
+  .foot { margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--edge);
+    color: var(--muted); font-size: 0.9rem; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.8rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">AMD Developer Hackathon: ACT II — Track 2</div>
+  <h1>StyleForge</h1>
+  <p class="lede">One clip, four voices. A Gemma 3 4B that <em>learned</em> tone through
+    judge-preference training on AMD MI300X — riding inside a CPU-only container that
+    survives anything.</p>
+  <div class="badges">
+    <span class="badge hot">DPO fine-tuned Gemma 3 4B</span>
+    <span class="badge">Trained on AMD Instinct MI300X</span>
+    <span class="badge">Kimi K2.6 vision via Fireworks</span>
+    <span class="badge">Best-of-N judge reranking</span>
+  </div>
+
+  <h2>The example clips, captioned by the shipped container</h2>
+  <div class="clip-grid" id="clips">loading…</div>
+  <p class="note">These captions are unedited output from the exact Docker image submitted
+    for evaluation, run against the organizers' three example clips.</p>
+
+  <h2>Measured honestly</h2>
+  <table id="evaltable">
+    <tr><th>arm</th><th>formal</th><th>sarcastic</th><th>humorous_tech</th><th>humorous_non_tech</th><th>ALL</th></tr>
+    <tr><td>Kimi K2.6 prompted</td><td>8.92</td><td>7.72</td><td>8.23</td><td>7.87</td><td><b>8.18</b></td></tr>
+    <tr><td>Gemma 3 4B base</td><td>7.88</td><td>6.78</td><td>8.18</td><td>8.02</td><td>7.72</td></tr>
+    <tr><td>Gemma tuned v1</td><td>7.90</td><td>7.32</td><td>7.82</td><td>7.97</td><td>7.75</td></tr>
+    <tr class="hot"><td>Gemma tuned v2</td><td>8.40</td><td>7.13</td><td>7.93</td><td>7.83</td><td>7.83</td></tr>
+  </table>
+  <p class="note">30 held-out scenes × 4 styles, judged by gpt-oss-120b — an independent
+    model family, so nobody grades their own homework. Two targeted DPO rounds: round 1
+    lifted sarcastic +0.54 over base; round 2 aimed at the diagnosed accuracy gap and
+    lifted formal +0.50. The frontier model keeps the leaderboard slot on detail density —
+    a capacity gap, not a tuning gap — so best-of-N ships as default and the tuned Gemma
+    rides in-container as the zero-dependency fallback voice.</p>
+
+  <h2>Architecture: eyes, voice, taste</h2>
+  <div class="flow">
+    <div class="stage"><div class="tag">Ingest</div><p>ffmpeg single-pass frames + Whisper transcript</p></div>
+    <div class="stage"><div class="tag">Eyes</div><p>Kimi K2.6 vision → dense factual description</p></div>
+    <div class="stage hot"><div class="tag">Voice</div><p>Gemma 3 4B — DPO-tuned, quantized, on CPU inside the container</p></div>
+    <div class="stage"><div class="tag">Taste</div><p>LLM judge scores K candidates → best per style</p></div>
+    <div class="stage"><div class="tag">Armor</div><p>Pre-written results, atomic upgrades, 3-tier fallbacks, 10-min budget</p></div>
+  </div>
+
+  <div class="foot">
+    <span>Sankar Subbayya × Claude (Anthropic) — July 2026</span>
+    <span><a href="https://github.com/SankarSubbayya/styleforge">github.com/SankarSubbayya/styleforge</a></span>
+  </div>
+</div>
+<script>
+const CLIP_URLS = {
+  v1: "https://storage.googleapis.com/amd-hackathon-clips/1860079-uhd_2560_1440_25fps.mp4",
+  v2: "https://storage.googleapis.com/amd-hackathon-clips/13825391-uhd_3840_2160_30fps.mp4",
+  v3: "https://storage.googleapis.com/amd-hackathon-clips/3044693-uhd_3840_2160_24fps.mp4",
+};
+fetch("results.json").then(r => r.json()).then(results => {
+  document.getElementById("clips").innerHTML = results.map(t => `
+    <div class="clip-card">
+      <video src="${CLIP_URLS[t.task_id]}" controls muted preload="metadata"></video>
+      <div class="caps">${Object.entries(t.captions).map(([s, c]) =>
+        `<div class="cap"><div class="style">${s}</div><p>${c}</p></div>`).join("")}
+      </div>
+    </div>`).join("");
+}).catch(() => document.getElementById("clips").textContent = "results loading…");
+</script>
+</body>
+</html>

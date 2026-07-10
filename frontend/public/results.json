@@ -1,0 +1,29 @@
+[
+  {
+    "task_id": "v1",
+    "captions": {
+      "formal": "A time-lapse captures rhythmic traffic congestion and release along a multi-lane urban artery in Seoul, with autumn foliage and high-rise residential towers framing the corridor. The compressed footage reveals cyclical rush-hour patterns as vehicles accumulate, cluster, and disperse under signal control.",
+      "sarcastic": "Peak urban planning: five seconds of cars crawling past identical towers, then briefly not crawling, then crawling again. Truly mesmerizing innovation in how to move slightly fewer people than last time.",
+      "humorous_tech": "Rush hour traffic light cycles like a CI/CD pipeline: green deploys smooth, red builds fail, and that bus at 4.5s is just the rollback nobody asked for.",
+      "humorous_non_tech": "Even the traffic in Seoul has commitment issues: floods together, panics, spreads out, then wonders why nobody stayed."
+    }
+  },
+  {
+    "task_id": "v2",
+    "captions": {
+      "formal": "A small orange kitten sits beneath dense foliage in a shaded outdoor setting, then rises and walks deliberately toward the camera, its gaze fixed and tail elevated, until its front paw nearly touches the lens.",
+      "sarcastic": "A wild beast embarks on a breathtaking quest across three inches of dirt to conquer a camera lens. Truly the most thrilling nature documentary ever filmed.",
+      "humorous_tech": "Orange kitten freezes in production, then deploys paw by paw toward the camera with zero test coverage. Critical proximity alert triggered at 9.8s\u2014no rollback possible.",
+      "humorous_non_tech": "A tiny orange kitten sits frozen beneath a bush, then suddenly remembers it has somewhere to be and begins the world's slowest, most dramatic charge toward the camera. By the end, it's basically interviewing you for a job."
+    }
+  },
+  {
+    "task_id": "v3",
+    "captions": {
+      "formal": "A woman performs focused computer work at a desk in a modern office environment, alternating between screen observation and keyboard input with consistent posture throughout the sequence.",
+      "sarcastic": "Thrilling cinema. Seventeen seconds of a woman typing while occasionally looking up\u2014finally, someone dared to capture the raw adrenaline of spreadsheet work.",
+      "humorous_tech": "She's in deep focus mode: eyes on screen, hands on keyboard, definitely not reading a Slack thread about why prod went down at 3 AM. The real bug is the cable management, but that's version 2.0.",
+      "humorous_non_tech": "She types, she pauses, she types again\u2014convinced that if she stares hard enough, the spreadsheet will apologize for its existence."
+    }
+  }
+]

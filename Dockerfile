@@ -17,8 +17,8 @@ RUN pip install --no-cache-dir . \
     && pip install --no-cache-dir llama-cpp-python \
        --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
 
-# The DPO-tuned Gemma 3 4B (Q4_K_M GGUF) — the star of the show, serving on CPU.
-COPY data/models/styleforge-gemma-q4.gguf /app/models/styleforge-gemma-q4.gguf
+# The DPO-tuned Gemma 3 4B (Q4_K_M GGUF) — round-2 model (won the eval vs v1).
+COPY data/models/styleforge-v2-q4.gguf /app/models/styleforge-gemma-q4.gguf
 
 # Pre-fetch the Whisper model at build time — no download inside the 10-min eval window.
 ENV HF_HOME=/app/.cache

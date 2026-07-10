@@ -20,9 +20,12 @@ sys.path.insert(0, "/train/src")
 from styleforge.config import STYLES  # noqa: E402
 from styleforge.stylize import SYSTEM, _user_prompt  # noqa: E402
 
-MERGED = "/train/styleforge-gemma-dpo-merged"
+import os
+
+MERGED = os.getenv("MERGED", "/train/styleforge-gemma-dpo-merged")
 BASE = "google/gemma-3-4b-it"
-OUT = "/train/eval_captions_gemma.jsonl"
+OUT = os.getenv("OUT", "/train/eval_captions_gemma.jsonl")
+SKIP_BASE = os.getenv("SKIP_BASE") == "1"  # base arm already banked from round 1
 
 
 def load(path):
@@ -81,8 +84,9 @@ def main() -> None:
             done.add((r["desc_idx"], r["style"], r["arm"]))
     except FileNotFoundError:
         pass
+    arms = [("tuned", MERGED)] if SKIP_BASE else [("tuned", MERGED), ("base", BASE)]
     with open(OUT, "a") as f:
-        for arm, path in [("tuned", MERGED), ("base", BASE)]:
+        for arm, path in arms:
             if all((i, s, arm) in done for i in range(len(descs)) for s in STYLES):
                 print(f"{arm}: already complete")
                 continue

@@ -1,0 +1,12 @@
+{
+  "name": "styleforge-demo",
+  "version": "1.0.0",
+  "description": "StyleForge demo — AMD Hackathon ACT II Track 2",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  }
+}

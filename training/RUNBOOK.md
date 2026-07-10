@@ -51,7 +51,15 @@ scp -r root@<droplet-ip>:~/train/styleforge-gemma-dpo data/models/lora/
 Then: wire GGUF into the container (llama-cpp-python, `--mode tuned+bon`), run the eval
 harness (baseline vs bon vs tuned+bon), Gate G2 decides what ships.
 
-## Known risks
+## Known risks (updated with lessons from the actual run)
+
+- **NEVER pip install third-party requirements files into the training container.**
+  llama.cpp's `requirements-convert_hf_to_gguf.txt` replaced the ROCm torch with a
+  CPU-only build and broke torchvision — killed GPU access after training. Quantize
+  in a THROWAWAY container, or apt-install cmake and build only llama-quantize.
+- **These droplets ship ufw with `22/tcp LIMIT`** — more than ~6 SSH connections per
+  30s from one IP get REFUSED. Aggressive monitoring loops self-inflict an "outage."
+  Fix at droplet setup: `ufw delete limit 22/tcp && ufw allow 22/tcp`.
 
 - **Gemma 3 4B = multimodal checkpoint**: `train_dpo.py` tries CausalLM then
   ImageTextToText. If both misbehave under TRL, fallback base: `google/gemma-3-1b-it`
