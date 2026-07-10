@@ -1,9 +1,14 @@
 .git
 .venv
 data
+!data/models/styleforge-gemma-q4.gguf
 *.local.md
 .env
 amd_hackathon_readme.md
 PRD.md
+presentation
+eval
+training
+tests
 __pycache__
 *.pyc

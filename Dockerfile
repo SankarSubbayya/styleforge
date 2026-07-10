@@ -12,7 +12,13 @@ RUN apt-get update \
 WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir . \
+    # Prebuilt CPU wheel — avoids compiling llama.cpp under qemu in buildx
+    && pip install --no-cache-dir llama-cpp-python \
+       --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+
+# The DPO-tuned Gemma 3 4B (Q4_K_M GGUF) — the star of the show, serving on CPU.
+COPY data/models/styleforge-gemma-q4.gguf /app/models/styleforge-gemma-q4.gguf
 
 # Pre-fetch the Whisper model at build time — no download inside the 10-min eval window.
 ENV HF_HOME=/app/.cache

@@ -91,7 +91,10 @@ def _process(task: dict, tmpdir: Path, deadline: float) -> dict:
             _log(f"task {task_id} download retry after: {e}")
             _download(task["video_url"], clip, deadline)
         remaining = deadline - time.time()
-        mode = "bon" if remaining > DEGRADE_THRESHOLD_SEC else "baseline"
+        # Primary mode is env-selected (Gate G2 eval decides the shipped default);
+        # thin remaining time always degrades to the cheapest mode.
+        primary = os.getenv("HARNESS_MODE", "bon")
+        mode = primary if remaining > DEGRADE_THRESHOLD_SEC else "baseline"
         result = pipeline.caption_clip(clip, mode=mode, k=BON_K, styles=known)
         for style in known:
             entry = result["captions"].get(style)

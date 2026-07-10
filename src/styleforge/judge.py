@@ -59,7 +59,8 @@ def score(
         temperature=0.0,
         max_tokens=400,
         json_mode=True,
-        reasoning_effort="none",
+        # gpt-oss rejects "none"; "low" is its minimum. Kimi accepts "none".
+        reasoning_effort="low" if "gpt-oss" in model else "none",
     )
     try:
         parsed = json.loads(raw)

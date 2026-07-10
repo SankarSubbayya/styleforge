@@ -28,13 +28,21 @@ def caption_clip(
     transcript = ingest.transcribe(path, info)
     description = perception.describe(frames, transcript)
 
+    # tuned modes use the in-container Gemma when its GGUF is present; if the
+    # model file is missing (e.g. dev checkout) they fall back to the API stylizer.
+    use_tuned = mode.startswith("tuned")
+    if use_tuned:
+        from . import local_gemma
+
+        gen = local_gemma.generate if local_gemma.available() else stylize.generate
+    else:
+        gen = stylize.generate
+
     captions: dict[str, dict] = {}
     # None means "all styles"; an explicit empty list means exactly that — no work.
     for style in (list(config.STYLES) if styles is None else styles):
         try:
-            cands = stylize.generate(
-                description, transcript, style, k=k if use_bon else 1
-            )
+            cands = gen(description, transcript, style, k=k if use_bon else 1)
             if use_bon and len(cands) > 1:
                 from concurrent.futures import ThreadPoolExecutor
 

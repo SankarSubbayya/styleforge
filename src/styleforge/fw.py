@@ -18,7 +18,14 @@ def client() -> OpenAI:
                 "FIREWORKS_API_KEY is not set. Put it in .env or the environment, "
                 "or run with STYLEFORGE_MOCK=1 for an offline smoke test."
             )
-        _client = OpenAI(base_url=config.FIREWORKS_BASE_URL, api_key=config.FIREWORKS_API_KEY)
+        _client = OpenAI(
+            base_url=config.FIREWORKS_BASE_URL,
+            api_key=config.FIREWORKS_API_KEY,
+            # Fail fast: our own retry loop handles recovery. The SDK default
+            # (600s + internal retries) once wedged data-gen for 30 minutes.
+            timeout=90,
+            max_retries=0,
+        )
     return _client
 
 
