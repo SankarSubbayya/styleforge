@@ -1,5 +1,6 @@
 """Thin Fireworks client wrapper: retries, cost logging, mock mode."""
 
+import os
 import time
 
 from openai import OpenAI
@@ -48,6 +49,8 @@ def chat(
         kwargs["response_format"] = {"type": "json_object"}
     if reasoning_effort is not None:
         # Kimi K2.x: "none" fully disables thinking -> fast, cheap, clean content.
+        # vLLM (all-Gemma demo endpoint) only accepts low|medium|high — override via env.
+        reasoning_effort = os.getenv("REASONING_EFFORT_OVERRIDE", reasoning_effort)
         kwargs["extra_body"] = {"reasoning_effort": reasoning_effort}
 
     last_err: Exception | None = None

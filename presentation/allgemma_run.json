@@ -1,0 +1,56 @@
+{
+  "clip": "data/clips/13825391-uhd_3840_2160_30fps.mp4",
+  "mode": "bon",
+  "duration_sec": 12.366667,
+  "n_frames": 12,
+  "transcript": "",
+  "description": "The setting is an outdoor area with trees and dense foliage, partially shaded. The ground is covered in light-colored dirt and leaf litter. A single orange tabby kitten is the sole animal present. \n\nAt 0.5 seconds, the kitten is stationary, facing the camera with ears erect. From 1.5 to 11.9 seconds, the kitten walks directly towards the camera at a consistent pace. Its tail is raised throughout this movement. The kitten\u2019s paws are visible with each step. There is no discernible change in the kitten\u2019s gait or posture during the walk. \n\nNo on-screen text is present in any frame. The audio transcript indicates no sound is present throughout the clip. \n\nThe overall arc consists of the kitten approaching the camera. The sequence is linear and predictable. No unusual or awkward events occur. The kitten maintains direct eye contact with the camera throughout the duration of the clip.",
+  "captions": {
+    "formal": {
+      "caption": "An orange tabby kitten advances steadily toward the camera across a dirt and leaf-littered landscape. The feline maintains a consistent pace and direct visual engagement throughout the observed duration.",
+      "score": {
+        "accuracy": 10.0,
+        "tone": 9.0,
+        "overall": 9.5,
+        "rationale": "The caption accurately describes the kitten's movement and environment, and the formal tone is nearly perfect, exhibiting professional language and a neutral register without being overly verbose.",
+        "n_judges": 1
+      },
+      "n_candidates": 2
+    },
+    "sarcastic": {
+      "caption": "Behold, a kitten. It really commits to walking forward, doesn\u2019t it?",
+      "score": {
+        "accuracy": 10.0,
+        "tone": 9.0,
+        "overall": 9.5,
+        "rationale": "The caption accurately describes the kitten walking and nails the sarcastic tone through understated observation and feigned admiration of a mundane action.",
+        "n_judges": 1
+      },
+      "n_candidates": 3
+    },
+    "humorous_tech": {
+      "caption": "Deploying cuteness overload. This kitten\u2019s direct API call to our hearts has zero latency.",
+      "score": {
+        "accuracy": 9.0,
+        "tone": 8.0,
+        "overall": 8.5,
+        "rationale": "The caption accurately describes the kitten walking *towards* the viewer as a 'deployment' and uses tech jargon effectively, though the humor is slightly predictable and relies heavily on the tech analogy rather than a surprising twist.",
+        "n_judges": 1
+      },
+      "n_candidates": 3
+    },
+    "humorous_non_tech": {
+      "caption": "This kitten is on a mission, and absolutely nothing will stop its determined march forward. Those little paws are really going places!",
+      "score": {
+        "accuracy": 10.0,
+        "tone": 8.0,
+        "overall": 9.0,
+        "rationale": "The caption accurately describes the kitten's focused walk and conveys a lighthearted, humorous tone without relying on any tech or internet references, though the 'mission' framing is slightly clich\u00e9.",
+        "n_judges": 1
+      },
+      "n_candidates": 3
+    }
+  },
+  "elapsed_sec": 40.3,
+  "cost": "API calls: 24 | prompt tok: 12,480 | completion tok: 1,130"
+}
