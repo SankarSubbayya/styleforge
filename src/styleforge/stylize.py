@@ -10,10 +10,7 @@ SYSTEM = (
     "You write short captions for video clips. You are given a factual description of the "
     "clip and a target style. Write ONE caption: at most 2 sentences, at most 40 words, "
     "standalone (no preamble, no quotes, no hashtags, no emoji). The caption must be "
-    "faithful to what actually happens in the clip AND land the requested style hard. "
-    "Include concrete visual details from the description: named subjects, objects, "
-    "actions, and the specific mishap or punchline. Do not replace them with vague "
-    "phrases like 'an incident,' 'a situation,' or 'unexpected events.'"
+    "faithful to what actually happens in the clip AND land the requested style hard."
 )
 
 
