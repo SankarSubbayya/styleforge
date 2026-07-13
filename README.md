@@ -12,10 +12,44 @@ Team: Sankar Subbayya × Claude (Anthropic)
 | 📦 **Submission image** | `ghcr.io/sankarsubbayya/styleforge:latest` (linux/amd64, 2.9 GB) |
 | 🧠 **Trained artifact** | Gemma 3 4B, 3 rounds of DPO on AMD Instinct MI300X, Q4 GGUF in-container |
 
-## What it does
+## The problem
 
-Given a video clip, StyleForge writes captions in four styles — `formal`,
-`sarcastic`, `humorous_tech`, `humorous_non_tech` — via a staged pipeline:
+This is Track 2 of the AMD Developer Hackathon ACT II: build an agent that
+watches a short video clip (30 s – 2 min) and writes a caption for it in four
+required styles — **formal**, **sarcastic**, **humorous_tech**, and
+**humorous_non_tech**. Every caption is scored by an LLM judge on two axes:
+**accuracy** (does it describe what actually happens?) and **style match**
+(does it land the requested tone?). Evaluation runs on a *hidden* set of
+clips, inside a Docker container, on unknown CPU-only hardware, with a hard
+10-minute limit.
+
+The hard part isn't describing a video — modern vision models do that well.
+The hard part is **tone**: prompted models blur the line between sarcastic
+and humorous, drift into generic captions that could fit any clip, and a
+single missing style or malformed output file scores zero. So the real
+problems are (1) making four voices genuinely distinct and faithful, and
+(2) never, ever returning nothing.
+
+## The solution
+
+StyleForge splits the job in two. A frontier vision model (Kimi K2.6) does
+the *seeing* — it turns the clip's frames and audio transcript into a dense
+factual description. Writing the caption is then pure **style transfer over
+text** — a narrow task, small enough to *train*: we fine-tuned a **Gemma 3
+4B** with DPO on 1,200+ judge-ranked caption pairs, across three measured
+rounds on an AMD Instinct MI300X, until it matched the frontier model on
+factual accuracy and beat it on non-tech humor. At runtime, several candidate
+captions per style are generated and an LLM judge picks the best one.
+
+Wrapped around all of it is a survival-first harness: a valid results file
+exists from the first second of execution and only ever gets better, so
+infrastructure failures (including the organizers' own, of which there were
+several) degrade the score instead of zeroing it.
+
+## How it works
+
+Given a video clip, StyleForge writes captions in four styles via a staged
+pipeline:
 
 ```
 clip ──► INGEST                ──► EYES                    ──► VOICE                       ──► TASTE
